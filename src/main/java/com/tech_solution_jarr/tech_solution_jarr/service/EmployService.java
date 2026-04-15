@@ -7,4 +7,5 @@ import java.util.List;
 public interface EmployService {
     EmployResponse create(CreateEmployRequest request);
     List<EmployResponse> getAll();
+    EmployResponse getById(Long id);
 }
