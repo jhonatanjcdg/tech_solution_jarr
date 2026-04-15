@@ -11,32 +11,30 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class EmployServiceImpl implements EmployService {
 
     private final EmployRepository employRepository;
 
+    // Constructor manual para asegurar la inyección de dependencias aunque Lombok falle
+    public EmployServiceImpl(EmployRepository employRepository) {
+        this.employRepository = employRepository;
+    }
+
     @Override
     public EmployResponse create(CreateEmployRequest request) {
-        // Lógica de negocio extra: validar que el email no se repita
         if (employRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
 
-        // 1. Instancia un Employ
         Employ employ = new Employ();
-        
-        // 2. Mapea los datos del DTO
         employ.setName(request.getName());
         employ.setLastName(request.getLastName());
         employ.setEmail(request.getEmail());
         employ.setPosition(request.getPosition());
         employ.setSalary(request.getSalary());
         
-        // 3. Usa repository.save()
         Employ savedEmploy = employRepository.save(employ);
         
-        // 4. Retorna un EmployResponse
         return new EmployResponse(
             savedEmploy.getId(), 
             savedEmploy.getName(),
@@ -74,5 +72,36 @@ public class EmployServiceImpl implements EmployService {
             employ.getPosition(),
             employ.getSalary()
         );
+    }
+
+    @Override
+    public EmployResponse update(Long id, CreateEmployRequest request) {
+        Employ employ = employRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
+        
+        employ.setName(request.getName());
+        employ.setLastName(request.getLastName());
+        employ.setEmail(request.getEmail());
+        employ.setPosition(request.getPosition());
+        employ.setSalary(request.getSalary());
+
+        Employ updatedEmploy = employRepository.save(employ);
+
+        return new EmployResponse(
+            updatedEmploy.getId(), 
+            updatedEmploy.getName(),
+            updatedEmploy.getLastName(),
+            updatedEmploy.getEmail(),
+            updatedEmploy.getPosition(),
+            updatedEmploy.getSalary()
+        );
+    }
+
+    @Override
+    public void delete(Long id) {
+        if (!employRepository.existsById(id)) {
+            throw new RuntimeException("Employee not found");
+        }
+        employRepository.deleteById(id);
     }
 }
