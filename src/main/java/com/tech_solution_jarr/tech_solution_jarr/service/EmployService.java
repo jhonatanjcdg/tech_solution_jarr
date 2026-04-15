@@ -7,9 +7,11 @@ import com.tech_solution_jarr.tech_solution_jarr.dto.EmployResponse;
 
 public interface EmployService {
     EmployResponse create(CreateEmployRequest request);
+
     List<EmployResponse> getAll();
-    EmployResponse getById(Long id);
     
+    EmployResponse getById(Long id);
+
     EmployResponse update(Long id, CreateEmployRequest request);
     void delete(Long id);
 }
