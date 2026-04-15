@@ -19,6 +19,8 @@ public class CreateEmployRequest {
 
     private Double salary;
 
+    private Long departamentId;
+
     public CreateEmployRequest() {}
 
     public String getName() { return name; }
@@ -35,4 +37,7 @@ public class CreateEmployRequest {
 
     public Double getSalary() { return salary; }
     public void setSalary(Double salary) { this.salary = salary; }
+
+    public Long getDepartamentId() { return departamentId; }
+    public void setDepartamentId(Long departamentId) { this.departamentId = departamentId; }
 }
